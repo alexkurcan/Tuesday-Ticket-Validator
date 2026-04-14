@@ -52,5 +52,20 @@ def test_prices(ticket_type, age, expected):
     assert calc_ticket_price(ticket_type, age) == expected
 
 # Ticket is expired :( tests
-def test_is_not_expired():
-    
+def test_is_not_expired(): # my birthday is hidden somewhere here..
+    assert it_the_ticket_expired("2026-11-08", "2026-01-02") == False
+
+def test_is_expired():
+    assert it_the_ticket_expired("2026-01-01", "2026-01-02") == True
+
+def test_bad_format():
+    with pytest.raises(ValueError):
+        it_the_ticket_expired("01-11-2026", "2026-01-02")
+
+@pytest.mark.parametrize("event,purchased,expected", [
+    ("2026-12-01", "2026-01-02", False),
+    ("2021-11-08", "2026-11-08", True),
+    ("2026-4-14", "2026-06-15", False),
+])
+def test_expieration(event, purchased, expected):
+    assert it_the_ticket_expired(event, purchased) == expected
